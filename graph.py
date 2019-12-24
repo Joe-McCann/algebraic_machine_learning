@@ -13,7 +13,7 @@ class Graph:
     def insert_node(self, layer, node):
         self.layers[layer].add(node)
 
-    def connect_nodes(self, parent, child):
+    def connect_nodes(self, child, parent):
         parent.add_child(child)
         child.add_parent(parent)
 
@@ -28,7 +28,7 @@ class Graph:
         self.insert_layer(Kind.piece, pieces)
         self.layers[Kind.piece].add(self.pqual)
         #Create atom
-        self.insert_layer(Kind.atom, [Node("0", 2)])
+        self.insert_layer(Kind.atom, [Node("0", Kind.atom)])
         #Create connections from atom layer to piece layer
         for atom in self.layers[Kind.atom]:
             for piece in self.layers[Kind.piece]:
@@ -78,4 +78,14 @@ class Graph:
         #Connect the positive qualities constant in the dual graph to all the positive data in the dual graph
         for data in self.layers[Kind.posdata]:
             self.connect_nodes(data.dual, pqual.dual)
+
+        #Make base atom
+        self.layers[Kind.d_baseAtom] = set()
+        baseAtom = Node("BaseAtom", Kind.d_baseAtom)
+        self.insert_layer(Kind.d_baseAtom, [baseAtom])
+        for member in self.layers[Kind.d_posdata]:
+            self.connect_nodes(baseAtom, member)
+        for member in self.layers[Kind.d_negdata]:
+            self.connect_nodes(baseAtom, member)
+
         

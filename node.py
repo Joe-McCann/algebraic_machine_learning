@@ -43,3 +43,4 @@ class Kind(Enum):
     d_negdata = 5
     d_piece = 6
     d_atom = 7
+    d_baseAtom = 8
